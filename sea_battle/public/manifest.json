@@ -1,0 +1,10 @@
+{
+  "short_name": "Sea Battle",
+  "name": "First task in DSR deep dive into react course named 'Sea Battle'",
+  "icons": [
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
