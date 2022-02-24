@@ -4,6 +4,7 @@ import { createEmptyGameField, IGameField } from './IGameField'
 import NotificationOverlay, { EOverlayMessages } from './NotificationOverlay'
 import './Game.css'
 import GameFieldsBattle from './game_field/GameFieldsBattle'
+import GameFieldsEnding from './game_field/GameFieldsEnding'
 
 type TGameState = 'placement' | 'battle' | 'result'
 type TPlayerTurn = 'playerOneTurn' | 'playerTwoTurn'
@@ -26,7 +27,7 @@ class Game extends React.Component<any, IGameReactState> {
       overlayMessage: EOverlayMessages.placementOne,
       gameFieldOne: createEmptyGameField(5),
       gameFieldTwo: createEmptyGameField(5),
-      shipCount: 8,
+      shipCount: 2,
     }
 
     this.handleConfirmMessage = this.handleConfirmMessage.bind(this)
@@ -39,9 +40,6 @@ class Game extends React.Component<any, IGameReactState> {
 
   handleConfirmMessage() {
     this.setState({ overlayMessage: EOverlayMessages.empty })
-    if (this.state.gameState === 'result') {
-      this.beginNewGame()
-    }
   }
 
   handlePlayerTwoPlace() {
@@ -126,23 +124,36 @@ class Game extends React.Component<any, IGameReactState> {
               onConfirm={this.handleTurnPlayerOne}
             />
           )
-        ) : this.state.gameState === 'battle' &&
+        ) : this.state.gameState === 'battle' ? (
           this.state.playerTurn === 'playerOneTurn' ? (
-          <GameFieldsBattle
-            headerMessage="Ход первого игрока"
-            gameFieldOwn={this.state.gameFieldOne}
-            gameFieldEnemy={this.state.gameFieldTwo}
-            onNextStep={this.handleTurnPlayerTwo}
-            onWin={this.handleWin}
-          />
+            <GameFieldsBattle
+              headerMessage="Ход первого игрока"
+              gameFieldOwn={this.state.gameFieldOne}
+              gameFieldEnemy={this.state.gameFieldTwo}
+              onNextStep={this.handleTurnPlayerTwo}
+              onWin={this.handleWin}
+            />
+          ) : (
+            <GameFieldsBattle
+              headerMessage="Ход второго игрока"
+              gameFieldOwn={this.state.gameFieldTwo}
+              gameFieldEnemy={this.state.gameFieldOne}
+              onNextStep={this.handleTurnPlayerOne}
+              onWin={this.handleWin}
+            />
+          )
         ) : (
-          <GameFieldsBattle
-            headerMessage="Ход второго игрока"
-            gameFieldOwn={this.state.gameFieldTwo}
-            gameFieldEnemy={this.state.gameFieldOne}
-            onNextStep={this.handleTurnPlayerOne}
-            onWin={this.handleWin}
-          />
+          this.state.gameState === 'result' && (
+            <GameFieldsEnding
+              headerMessage={
+                this.state.playerTurn === 'playerOneTurn'
+                  ? EOverlayMessages.resultWinOne
+                  : EOverlayMessages.resultWinTwo
+              }
+              gameFieldOne={this.state.gameFieldOne}
+              gameFieldTwo={this.state.gameFieldTwo}
+            />
+          )
         )}
       </div>
     )

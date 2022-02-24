@@ -33,7 +33,7 @@ class GameFieldPlacement extends React.Component<
     }
   }
 
-  handleClick(x: number, y: number, prevState: TCellState) {
+  handleClick(x: number, y: number) {
     const gameField = this.state.gameField
     let newShipCount = this.state.shipsLeft
     if (this.state.shipsLeft !== 0 && gameField.cells[y][x] === 'empty') {

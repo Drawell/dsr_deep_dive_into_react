@@ -2,11 +2,14 @@ import React from 'react'
 import { IGameField, TCellState } from '../IGameField'
 import FieldCell from './FieldCell'
 import './GameField.css'
+import SelectedFieldCell from './SelectedFieldCell'
 
 interface IGameFieldGridProps {
   gameField: IGameField
   hidden: boolean
-  onClick: (x: number, y: number, prevState: TCellState) => void
+  selectedCellX?: number
+  selectedCellY?: number
+  onClick?: (x: number, y: number) => void
 }
 
 interface IGameFieldGridState {
@@ -19,6 +22,13 @@ class GameFieldGrid extends React.Component<
 > {
   constructor(props: IGameFieldGridProps) {
     super(props)
+    this.handleClick = this.handleClick.bind(this)
+  }
+
+  handleClick(x: number, y: number) {
+    if (this.props.onClick) {
+      this.props.onClick(x, y)
+    }
   }
 
   render() {
@@ -28,6 +38,9 @@ class GameFieldGrid extends React.Component<
           return (
             <div key={y} className="row">
               {row.map((cellType, x) => {
+                let selected =
+                  x === this.props.selectedCellX &&
+                  y === this.props.selectedCellY
                 return (
                   <FieldCell
                     key={`${x}-${y}`}
@@ -35,7 +48,8 @@ class GameFieldGrid extends React.Component<
                     hidden={this.props.hidden}
                     x={x}
                     y={y}
-                    onClick={this.props.onClick}
+                    selected={selected}
+                    onClick={this.handleClick}
                   />
                 )
               })}

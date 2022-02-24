@@ -7,7 +7,8 @@ interface IFieldCellProps {
   hidden: boolean
   x: number
   y: number
-  onClick: (x: number, y: number, prevState: TCellState) => void
+  selected?: boolean
+  onClick: (x: number, y: number) => void
 }
 
 interface IFieldCellState {}
@@ -20,7 +21,7 @@ class FieldCell extends React.Component<IFieldCellProps, IFieldCellState> {
   }
 
   handleClick() {
-    this.props.onClick(this.props.x, this.props.y, this.props.cellType)
+    this.props.onClick(this.props.x, this.props.y)
   }
 
   renderSymbol(cellType: TCellState) {
@@ -61,7 +62,7 @@ class FieldCell extends React.Component<IFieldCellProps, IFieldCellState> {
 
   render() {
     return (
-      <div className="cell">
+      <div className={'cell' + (this.props.selected ? ' selected-cell' : '')}>
         <input
           value={this.renderSymbol(this.props.cellType)}
           type="button"
@@ -74,3 +75,4 @@ class FieldCell extends React.Component<IFieldCellProps, IFieldCellState> {
 }
 
 export default FieldCell
+export type { IFieldCellProps }
