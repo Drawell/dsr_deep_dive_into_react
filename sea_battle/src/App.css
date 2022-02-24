@@ -1,0 +1,21 @@
+.d-flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.m-10 {
+  margin: 10px;
+}
+
+.m-50 {
+  margin: 50px;
+}

@@ -1,11 +1,13 @@
-import React from 'react';
+import React from 'react'
+import Game from './game/Game'
+import './App.css'
 
 function App() {
   return (
     <div className="App">
-      hello world
+      <Game />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
