@@ -27,7 +27,7 @@ class Game extends React.Component<any, IGameReactState> {
       overlayMessage: EOverlayMessages.placementOne,
       gameFieldOne: createEmptyGameField(5),
       gameFieldTwo: createEmptyGameField(5),
-      shipCount: 2,
+      shipCount: 8,
     }
 
     this.handleConfirmMessage = this.handleConfirmMessage.bind(this)
