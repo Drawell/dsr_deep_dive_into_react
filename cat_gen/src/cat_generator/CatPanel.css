@@ -1,0 +1,12 @@
+table {
+  margin: auto;
+  min-width: 50%;
+}
+
+th,
+td {
+  vertical-align: top;
+  min-width: 50%;
+  border: 1px solid black;
+  padding-right: 2rem;
+}

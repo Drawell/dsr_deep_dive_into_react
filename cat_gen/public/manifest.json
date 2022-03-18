@@ -1,0 +1,10 @@
+{
+  "short_name": "Cat Gen",
+  "name": "Task 2, Part 2 in DSR deep dive into react course named 'Cat Geneartor'",
+  "icons": [
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
