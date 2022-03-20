@@ -1,5 +1,20 @@
-.cat-container {
+.cat-list {
+  list-style-type: none;
+  padding: 8px;
+}
+
+.attribute-name {
+  color: blue;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.cat-view-container {
+  border: 1px solid black;
+  border-radius: 8px;
+  margin: 8px;
+  padding: 9px;
   display: flex;
-  column-gap: 1rem;
-  padding: 3px;
+  flex-direction: column;
+  align-items: flex-start;
 }

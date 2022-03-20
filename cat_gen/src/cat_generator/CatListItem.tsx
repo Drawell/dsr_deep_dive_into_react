@@ -38,23 +38,37 @@ class CatListItem extends React.Component<
 
   render() {
     return (
-      <li className="cat-container">
-        <span>{this.props.cat.id}</span>
-        <span>Кличка: {this.props.cat.name}</span>
-        <span>Годиков: {this.props.cat.age}</span>
-        <span>{this.props.cat.hasCollar ? 'с ошейником' : 'без ошейника'}</span>
-        <span>
-          {!this.props.cat.isTamed && !this.props.cat.hasCollar && (
-            <button onClick={this.handleTeme}>Приручить</button>
-          )}
-        </span>
-        <span>
-          {this.props.cat.isHungry ? (
-            <button onClick={this.handleFeed}>Покормить</button>
-          ) : (
-            'Сыт'
-          )}
-        </span>
+      <li className="cat-li">
+        <div className="cat-view-container">
+          <div>
+            <span className="attribute-name">Кличка: </span>
+            <span>{this.props.cat.name}</span>
+          </div>
+          <div>
+            <span className="attribute-name">Годиков: </span>
+            <span>{this.props.cat.age}</span>
+          </div>
+          <div>
+            <span className="attribute-name">Ошейник: </span>
+            {this.props.cat.hasCollar ? 'на месте' : 'отсутствует'}
+          </div>
+          <div>
+            <span className="attribute-name">Cтатус: </span>
+            {this.props.cat.isHungry ? (
+              <>
+                <span>Голоден </span>
+                <button onClick={this.handleFeed}>Покормить</button>
+              </>
+            ) : (
+              'Сыт'
+            )}
+          </div>
+          <div>
+            {!this.props.cat.isTamed && !this.props.cat.hasCollar && (
+              <button onClick={this.handleTeme}>Приручить</button>
+            )}
+          </div>
+        </div>
       </li>
     )
   }

@@ -17,7 +17,7 @@ class CatList extends React.Component<ICatListProps, ICatListState> {
 
   render() {
     return (
-      <ul>
+      <ul className="cat-list">
         {this.props.cats.map((cat) => {
           return <CatListItem key={cat.id} cat={cat} {...this.props} />
         })}
