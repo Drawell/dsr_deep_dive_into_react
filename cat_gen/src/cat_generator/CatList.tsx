@@ -8,22 +8,14 @@ interface ICatListProps extends ICatsViewCallbacks {
   cats: Array<ICat>
 }
 
-interface ICatListState {}
-
-class CatList extends React.Component<ICatListProps, ICatListState> {
-  constructor(props: ICatListProps) {
-    super(props)
-  }
-
-  render() {
-    return (
-      <ul className="cat-list">
-        {this.props.cats.map((cat) => {
-          return <CatListItem key={cat.id} cat={cat} {...this.props} />
-        })}
-      </ul>
-    )
-  }
+const CatList: React.FC<ICatListProps> = ({ cats, ...others }) => {
+  return (
+    <ul className="cat-list">
+      {cats.map((cat) => {
+        return <CatListItem key={cat.id} cat={cat} {...others} />
+      })}
+    </ul>
+  )
 }
 
 export default CatList
