@@ -1,12 +1,13 @@
 import { ICat } from './ICat'
 
 interface ICatsViewCallbacks {
-  onFeed: (catId: number) => void
-  onTame?: (catId: number) => void
+  onTame: (cat: ICat) => void
+  onLeave: (cat: ICat) => void
 }
 
-interface ICatsView extends ICatsViewCallbacks {
-  cats: Array<ICat>
+interface ICatsViewProps extends ICatsViewCallbacks {
+  wildCats: Array<ICat>
+  tamedCats: Array<ICat>
 }
 
-export type { ICatsViewCallbacks, ICatsView }
+export type { ICatsViewCallbacks, ICatsViewProps }

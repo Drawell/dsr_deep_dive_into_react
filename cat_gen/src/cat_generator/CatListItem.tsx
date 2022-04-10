@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { getHungryTimout, leaveTimout } from './Constants'
 import { ICat } from './ICat'
 import { ICatsViewCallbacks } from './ICatsView'
 
@@ -6,72 +7,75 @@ interface ICatListItemProps extends ICatsViewCallbacks {
   cat: ICat
 }
 
-interface ICatListItemState {
-  cat: ICat
-  fullTimeout: number
-  hungryTimeout: number
-}
+const CatListItem: React.FC<ICatListItemProps> = ({ cat, onTame, onLeave }) => {
+  const [actualCat, setActualCat] = useState(cat)
+  const [leaveTimerId, setLeaveTimerId] = useState<NodeJS.Timeout | null>(null)
 
-class CatListItem extends React.Component<
-  ICatListItemProps,
-  ICatListItemState
-> {
-  constructor(props: ICatListItemProps) {
-    super(props)
-    this.state = {
-      cat: this.props.cat,
-      fullTimeout: 3000,
-      hungryTimeout: 5000,
+  const handleTeme = useCallback(() => {
+    if (onTame) onTame(cat)
+  }, [cat, onTame])
+
+  const handleFeed = () => {
+    if (leaveTimerId) {
+      cat.isHungry = false
+      setActualCat({ ...cat })
+      clearTimeout(leaveTimerId)
     }
-
-    this.handleFeed = this.handleFeed.bind(this)
-    this.handleTeme = this.handleTeme.bind(this)
   }
 
-  handleFeed() {
-    this.props.onFeed(this.props.cat.id)
-  }
+  const handleCatGetHungry = useCallback(() => {
+    cat.isHungry = true
+    setActualCat({ ...cat })
+    const timerId_ = setTimeout(() => onLeave(cat), leaveTimout)
+    setLeaveTimerId(timerId_)
+  }, [cat, onLeave])
 
-  handleTeme() {
-    if (this.props.onTame) this.props.onTame(this.props.cat.id)
-  }
+  useEffect(() => {
+    const timerId_ = setTimeout(handleCatGetHungry, getHungryTimout)
 
-  render() {
-    return (
-      <li className="cat-li">
-        <div className="cat-view-container">
-          <div>
-            <span className="attribute-name">Кличка: </span>
-            <span>{this.props.cat.name}</span>
-          </div>
-          <div>
-            <span className="attribute-name">Годиков: </span>
-            <span>{this.props.cat.age}</span>
-          </div>
-          <div>
-            <span className="attribute-name">Ошейник: </span>
-            {this.props.cat.hasCollar ? 'на месте' : 'отсутствует'}
-          </div>
-          <div>
-            <span className="attribute-name">Cтатус: </span>
-            {this.props.cat.isHungry ? (
-              <>
-                <span>Голоден </span>
-                <button onClick={this.handleFeed}>Покормить</button>
-              </>
-            ) : (
-              'Сыт'
-            )}
-          </div>
-          <div>
-            {!this.props.cat.isTamed && !this.props.cat.hasCollar && (
-              <button onClick={this.handleTeme}>Приручить</button>
-            )}
-          </div>
+    return () => {
+      clearTimeout(timerId_)
+    }
+  }, [cat, handleCatGetHungry])
+
+  return (
+    <li className="cat-li">
+      <div className="cat-view-container">
+        <div>
+          <span className="attribute-name">Id: </span>
+          <span>{cat.id}</span>
         </div>
-      </li>
-    )
-  }
+        <div>
+          <span className="attribute-name">Кличка: </span>
+          <span>{cat.name}</span>
+        </div>
+        <div>
+          <span className="attribute-name">Годиков: </span>
+          <span>{cat.age}</span>
+        </div>
+        <div>
+          <span className="attribute-name">Ошейник: </span>
+          {cat.hasCollar ? 'на месте' : 'отсутствует'}
+        </div>
+        <div>
+          <span className="attribute-name">Cтатус: </span>
+          {actualCat.isHungry ? (
+            <>
+              <span>Голоден </span>
+              <button onClick={handleFeed}>Покормить</button>
+            </>
+          ) : (
+            'Сыт'
+          )}
+        </div>
+        <div>
+          {!cat.isTamed && !cat.hasCollar && (
+            <button onClick={handleTeme}>Приручить</button>
+          )}
+        </div>
+      </div>
+    </li>
+  )
 }
 
 export default CatListItem

@@ -1,17 +1,14 @@
 import React from 'react'
 import CatList from './CatList'
 import './CatPanel.css'
-import CatGenerator from './CatGenerator'
-import { ICatsView, ICatsViewCallbacks } from './ICatsView'
+import { ICatsViewProps } from './ICatsView'
+import withCats from './WithCats'
 
-const RenderCatsPanel = (props: ICatsView) => {
-  let cats
-  let others: ICatsViewCallbacks
-  ;({ cats, ...others } = { ...props })
-
-  const wildCats = props.cats.filter((cat) => !cat.hasCollar && !cat.isTamed)
-  const neighborCats = props.cats.filter((cat) => cat.hasCollar || cat.isTamed)
-
+const CatsPanel: React.FC<ICatsViewProps> = ({
+  wildCats,
+  tamedCats,
+  ...others
+}) => {
   return (
     <table>
       <tbody>
@@ -24,7 +21,7 @@ const RenderCatsPanel = (props: ICatsView) => {
             <CatList cats={wildCats} {...others} />
           </td>
           <td>
-            <CatList cats={neighborCats} {...others} />
+            <CatList cats={tamedCats} {...others} />
           </td>
         </tr>
       </tbody>
@@ -32,10 +29,4 @@ const RenderCatsPanel = (props: ICatsView) => {
   )
 }
 
-class CatsPanel extends React.Component<any, any> {
-  render() {
-    return <CatGenerator renderCats={RenderCatsPanel} />
-  }
-}
-
-export default CatsPanel
+export default withCats(CatsPanel)

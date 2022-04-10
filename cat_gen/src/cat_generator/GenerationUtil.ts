@@ -6,7 +6,6 @@ const catMaxAge = 15
 
 interface IIdSequence {
   currentId: number
-  randomNumber: number
 }
 
 function generateCatWithId(id: number): ICat {
@@ -33,17 +32,12 @@ function generateCatWithId(id: number): ICat {
 function generateCat(this: IIdSequence): ICat {
   const id = this.currentId
   this.currentId += 1
-  console.log('create cat', id, this)
   return generateCatWithId(id)
 }
 
-function getCatGenerator(outparam: any): () => ICat {
-  const rnd = Math.random()
-  outparam.out = rnd
-  console.log('get generator, bind with random number: ', rnd)
+function getCatGenerator(): () => ICat {
   const generateCatFunc = generateCat.bind({
     currentId: 1,
-    randomNumber: rnd,
   })
 
   return generateCatFunc
