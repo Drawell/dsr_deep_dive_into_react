@@ -18,9 +18,13 @@ const CatListItem: React.FC<ICatListItemProps> = ({ cat, onTame, onLeave }) => {
   }, [cat, leaveTimerId, onTame])
 
   const handleFeed = () => {
+    cat.isHungry = false
+    setActualCat({ ...cat })
+
+    const timerId_ = setTimeout(handleCatGetHungry, getHungryTimout)
+    setLeaveTimerId(timerId_)
+
     if (leaveTimerId) {
-      cat.isHungry = false
-      setActualCat({ ...cat })
       clearTimeout(leaveTimerId)
     }
   }
