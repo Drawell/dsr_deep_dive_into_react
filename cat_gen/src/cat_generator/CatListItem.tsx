@@ -12,8 +12,10 @@ const CatListItem: React.FC<ICatListItemProps> = ({ cat, onTame, onLeave }) => {
   const [leaveTimerId, setLeaveTimerId] = useState<NodeJS.Timeout | null>(null)
 
   const handleTeme = useCallback(() => {
+    cat.isHungry = false
+    if (leaveTimerId) clearTimeout(leaveTimerId)
     if (onTame) onTame(cat)
-  }, [cat, onTame])
+  }, [cat, leaveTimerId, onTame])
 
   const handleFeed = () => {
     if (leaveTimerId) {
@@ -32,7 +34,6 @@ const CatListItem: React.FC<ICatListItemProps> = ({ cat, onTame, onLeave }) => {
 
   useEffect(() => {
     const timerId_ = setTimeout(handleCatGetHungry, getHungryTimout)
-
     return () => {
       clearTimeout(timerId_)
     }
@@ -41,10 +42,6 @@ const CatListItem: React.FC<ICatListItemProps> = ({ cat, onTame, onLeave }) => {
   return (
     <li className="cat-li">
       <div className="cat-view-container">
-        <div>
-          <span className="attribute-name">Id: </span>
-          <span>{cat.id}</span>
-        </div>
         <div>
           <span className="attribute-name">Кличка: </span>
           <span>{cat.name}</span>

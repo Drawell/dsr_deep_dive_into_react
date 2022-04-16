@@ -1,13 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useReducer } from 'react'
 import { getCatGenerator } from './GenerationUtil'
 import { generationTimeout } from './Constants'
 import { ICat } from './ICat'
 import { ICatsViewProps } from './ICatsView'
-
-interface IAllCats {
-  wild: Array<ICat>
-  tamed: Array<ICat>
-}
+import { catManagementReuser } from './CatManagmentReducer'
 
 interface IWithCatsProps {}
 
@@ -16,55 +12,43 @@ const withCats =
     CatViewComponent: React.ComponentType<P & ICatsViewProps>
   ): React.FC<P & IWithCatsProps> =>
   ({ ...props }: IWithCatsProps) => {
-    const [generateCatFunc, setGenerateCatFunc] = useState(getCatGenerator)
-    const [cats, setCats] = useState<IAllCats>({ wild: [], tamed: [] })
-    const [wildCats, setWildCats] = useState<Array<ICat>>([])
-    const [tamedCats, setTamedCats] = useState<Array<ICat>>([])
+    const [cats, dispatchCats] = useReducer(catManagementReuser, {
+      wildCats: [],
+      tamedCats: [],
+    })
 
-    const handleGenerateCat = useCallback(() => {
-      const newCat = generateCatFunc()
+    const handleGenerateCat = useCallback((newCat: ICat) => {
       if (newCat.hasCollar) {
-        cats.tamed.push(newCat)
-        setTamedCats([...cats.tamed])
+        dispatchCats({ type: 'ADD_TAMED', cat: newCat })
       } else {
-        cats.wild.push(newCat)
-        setWildCats([...cats.wild])
+        dispatchCats({ type: 'ADD_WILD', cat: newCat })
       }
-    }, [generateCatFunc, cats])
+    }, [])
 
     useEffect(() => {
-      setInterval(handleGenerateCat, generationTimeout)
+      const generateCatFunc = getCatGenerator()
+      setInterval(() => {
+        const newCat = generateCatFunc()
+        handleGenerateCat(newCat)
+      }, generationTimeout)
     }, [handleGenerateCat])
 
-    const handleTameCat = useCallback(
-      (cat: ICat) => {
-        cat.isTamed = true
-        cats.wild = cats.wild.filter((cat_) => cat_.id !== cat.id)
-        cats.tamed.push(cat)
+    const handleTameCat = useCallback((cat: ICat) => {
+      dispatchCats({ type: 'TAME', cat })
+    }, [])
 
-        setWildCats([...cats.wild])
-        setTamedCats([...cats.tamed])
-      },
-      [cats]
-    )
-
-    const handleCatLeave = useCallback(
-      (cat: ICat) => {
-        if (cat.hasCollar || cat.isTamed) {
-          cats.tamed = cats.tamed.filter((cat_) => cat_.id !== cat.id)
-          setTamedCats(cats.tamed)
-        } else {
-          cats.wild = cats.wild.filter((cat_) => cat_.id !== cat.id)
-          setWildCats(cats.wild)
-        }
-      },
-      [cats]
-    )
+    const handleCatLeave = useCallback((cat: ICat) => {
+      if (cat.hasCollar || cat.isTamed) {
+        dispatchCats({ type: 'REMOVE_TAMED', cat })
+      } else {
+        dispatchCats({ type: 'REMOVE_WILD', cat })
+      }
+    }, [])
 
     return (
       <CatViewComponent
-        wildCats={wildCats}
-        tamedCats={tamedCats}
+        wildCats={cats.wildCats}
+        tamedCats={cats.tamedCats}
         onTame={handleTameCat}
         onLeave={handleCatLeave}
         {...(props as P)}
